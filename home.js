@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, Button, ImageBackground } from 'react-native';
+import { Text, View, StyleSheet, Button, ImageBackground, } from 'react-native';
+import {Control} from './control'
 import Constants from 'expo-constants';
 
 // You can import from local files
-
+import Drawer from 'react-native-drawer'
 
 const apiKey = 'IEXP6xrpD99dXZBtX4DzYWMcpq7p991CYJC6yV83LoYZF5C007-3GN1ABryMZXs5rGYeJyjzrJv9NBhb-vGdVo49GARfS4a9dq-kaclTy8O3B6S4f3duDD2U8iejXnYx';
 let Yelp = {
@@ -40,7 +41,7 @@ let Yelp = {
 import { Card } from 'react-native-paper';
 
 
-export class App extends React.Component {
+export class Home extends React.Component {
   constructor(props){
     super(props)
     this.state={
@@ -49,30 +50,31 @@ export class App extends React.Component {
     }
   }
   reveal = () =>{
-   Yelp.search('pizza', 'brooklyn', 'best_match' ).then(bus => 
-
-   {
-     console.log(bus);
-     this.setState({names:bus})
-     }
-   )
+   Yelp.search('pizza', 'brooklyn', 'best_match' ).then(bus => this.setState({names:bus}))
 }
+
+closeControlPanel = () => {
+  this._drawer.close()
+};
+openControlPanel = () => {
+  this._drawer.open()
+};
 render(){
   return (
     <View style={styles.container}>
     <ImageBackground source={this.state.image} style={styles.image}>
-      <Text style={styles.names}>{this.state.names.map(names => names.name + '\n ')}</Text>
-      <Card>
-      <Button onPress={this.reveal} title='Reveal Names'/>
-        <Text style={styles.paragraph}> Andy</Text>
-      </Card>
-      </ImageBackground>
+      <Text style={styles.names}>Hi</Text>
+      <Button
+        onPress={() => navigation.navigate('Notifications')}
+        title="Go to notifications"
+      />
+    </ImageBackground>
+    
     </View>
   );
 }
 
 }
-export default App;
   
 
 const styles = StyleSheet.create({
@@ -102,3 +104,7 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   }
 });
+const drawerStyles = {
+  drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3},
+  main: {paddingLeft: 3},
+}
