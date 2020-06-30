@@ -50,11 +50,13 @@ export class App extends React.Component {
       names: [],
      image : { uri: "https://blog.yelp.com/wp-content/uploads/2019/02/startingasmallbiz.png" },
      searchText : '',
-     location:''
+     location:'',
+     option: 'best_match',
+     option1: 'Best Match'
     }
   }
   reveal = () =>{
-   Yelp.search(this.state.searchText, this.state.location, 'best_match' ).then(bus => 
+   Yelp.search(this.state.searchText, this.state.location, this.state.optiond ).then(bus => 
 
    {
      console.log(bus);
@@ -65,11 +67,29 @@ export class App extends React.Component {
 onChange = (text) =>{
   this.setState({searchText: text})
 }
+buttonPress1 = () =>{
+this.setState({option: 'best_match', option1 : 'Best Match'})
+}
+buttonPress2 = () =>{
+  this.setState({option: 'rating', option1 : 'Highest Rated'})
+}
+buttonPress3 = () =>{
+  this.setState({option: 'review_count', option1 : 'Most Reviewed'})
+
+}
+
 render(){
   return (
     
     <ScrollView style={styles.container}>
       <Card style={styles.title}><Text style={styles.titletext}>RAVENOUS</Text></Card>
+      <View style={styles.opt}>
+      <Card style={styles.options}><Button onPress={this.buttonPress1} title='Best Match'></Button></Card> 
+      <Card style={styles.options}><Button onPress={this.buttonPress2} title='Highest Rated'></Button></Card>
+      <Card style={styles.options}><Button  onPress={this.buttonPress3} title='Most Reviewed'></Button></Card>
+  
+      </View>
+      <Text style={styles.paragraph}> Sort By: {this.state.option1}</Text>
       <Text style={styles.paragraph}>What are you looking for?</Text>
       <TextInput style={styles.search} onChangeText={(text) => this.setState({ searchText: text})} value={this.state.searchText} ></TextInput>
       <Text style={styles.paragraph}>Where?</Text>
@@ -77,7 +97,6 @@ render(){
       <View style={styles.button}>
       <Button color="white" style={styles.button} onPress={this.reveal} title='Search'/>
       </View>
-      
       <BusinessList businesses= {this.state.names}/>
     </ScrollView>
   );
@@ -88,6 +107,16 @@ export default App;
   
 
 const styles = StyleSheet.create({
+  opt:{
+    flexDirection: 'row'
+  },
+  options:
+  {
+    marginTop: 10,
+    width: 100,
+    marginRight: 40,
+    marginLeft: 5
+  },
   titletext:{
     color:'white',
     fontSize: 20,
