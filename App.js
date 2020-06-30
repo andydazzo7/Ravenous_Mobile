@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, Button, ImageBackground } from 'react-native';
+import { Text, View, StyleSheet, Button, ImageBackground, Linking, ScrollView, TextInput } from 'react-native';
 import Constants from 'expo-constants';
+import {Business} from './Business'
+import {BusinessList} from './BusinessList'
 
 // You can import from local files
 
@@ -38,6 +40,7 @@ let Yelp = {
 
 // or any pure javascript modules available in npm
 import { Card } from 'react-native-paper';
+import { onChange, color } from 'react-native-reanimated';
 
 
 export class App extends React.Component {
@@ -45,11 +48,13 @@ export class App extends React.Component {
     super(props)
     this.state={
       names: [],
-     image : { uri: "https://blog.yelp.com/wp-content/uploads/2019/02/startingasmallbiz.png" }
+     image : { uri: "https://blog.yelp.com/wp-content/uploads/2019/02/startingasmallbiz.png" },
+     searchText : '',
+     location:''
     }
   }
   reveal = () =>{
-   Yelp.search('pizza', 'brooklyn', 'best_match' ).then(bus => 
+   Yelp.search(this.state.searchText, this.state.location, 'best_match' ).then(bus => 
 
    {
      console.log(bus);
@@ -57,17 +62,24 @@ export class App extends React.Component {
      }
    )
 }
+onChange = (text) =>{
+  this.setState({searchText: text})
+}
 render(){
   return (
-    <View style={styles.container}>
-    <ImageBackground source={this.state.image} style={styles.image}>
-      <Text style={styles.names}>{this.state.names.map(names => names.name + '\n ')}</Text>
-      <Card>
-      <Button onPress={this.reveal} title='Reveal Names'/>
-        <Text style={styles.paragraph}> Andy</Text>
-      </Card>
-      </ImageBackground>
-    </View>
+    
+    <ScrollView style={styles.container}>
+      <Card style={styles.title}><Text style={styles.titletext}>RAVENOUS</Text></Card>
+      <Text style={styles.paragraph}>What are you looking for?</Text>
+      <TextInput style={styles.search} onChangeText={(text) => this.setState({ searchText: text})} value={this.state.searchText} ></TextInput>
+      <Text style={styles.paragraph}>Where?</Text>
+      <TextInput style={styles.search} onChangeText={(locatio) => this.setState({ location: locatio})} value={this.state.location} ></TextInput>
+      <View style={styles.button}>
+      <Button color="white" style={styles.button} onPress={this.reveal} title='Search'/>
+      </View>
+      
+      <BusinessList businesses= {this.state.names}/>
+    </ScrollView>
   );
 }
 
@@ -76,18 +88,32 @@ export default App;
   
 
 const styles = StyleSheet.create({
+  titletext:{
+    color:'white',
+    fontSize: 20,
+    textAlign: "center",
+    marginTop: 13
+
+  },
+  title:{
+    backgroundColor:'darkblue',
+    height: 50,
+  },
   container: {
     flex: 1,
-    justifyContent: 'center',
     paddingTop: Constants.statusBarHeight,
-    backgroundColor: '#ecf0f1',
+    backgroundColor: 'lightblue',
     padding: 8,
   },
   paragraph: {
     margin: 24,
+    marginLeft: 30,
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
+    justifyContent: 'center',
+    flex: 1,
+
   },
   names:{
     margin: 10,
@@ -100,5 +126,22 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: "cover",
     justifyContent: "center"
+  },
+  search:{
+    flex:1,
+    justifyContent: "center",
+    backgroundColor: "white",
+    fontSize: 18,
+    borderRadius: 5,
+    width: 350, 
+    marginLeft: 20,
+    marginBottom: 20
+  },
+  button:{
+    fontSize: 18,
+    justifyContent: "center",
+    backgroundColor: 'blue',
+    color: "white", 
+    borderRadius: 10
   }
 });
